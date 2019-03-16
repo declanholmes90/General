@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SVN_Xplorer.View
+namespace DirectoryTools.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

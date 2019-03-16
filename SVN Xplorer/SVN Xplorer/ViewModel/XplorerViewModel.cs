@@ -1,10 +1,10 @@
-﻿using SVN_Xplorer.Model;
+﻿using DirectoryTools.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace SVN_Xplorer.ViewModel
+namespace DirectoryTools.ViewModel
 {
     public class XplorerViewModel : INotifyPropertyChanged
     {

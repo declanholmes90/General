@@ -1,4 +1,4 @@
-﻿using SVN_Xplorer.Model.EventArguments;
+﻿using DirectoryTools.Model.EventArguments;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace SVN_Xplorer.Model
+namespace DirectoryTools.Model
 {
     public class DirectoryManager
     {

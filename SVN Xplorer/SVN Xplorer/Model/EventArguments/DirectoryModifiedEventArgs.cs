@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SVN_Xplorer.Model.EventArguments
+namespace DirectoryTools.Model.EventArguments
 {
     public class DirectoryModifiedEventArgs : EventArgs
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SVN_Xplorer.Properties
+namespace DirectoryTools.Properties
 {
 
 

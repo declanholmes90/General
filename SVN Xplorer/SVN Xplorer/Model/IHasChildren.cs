@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SVN_Xplorer.Model
+namespace DirectoryTools.Model
 {
     public interface IHasChildren
     {
