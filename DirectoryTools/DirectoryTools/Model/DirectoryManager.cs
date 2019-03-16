@@ -102,8 +102,6 @@ namespace DirectoryTools.Model
 
         private void OnChangedHandler(object o, FileSystemEventArgs e)
         {
-            MessageBox.Show("Something happened!");
-
             directoryModifiedEvent.Invoke(new DirectoryModifiedEventArgs(directoryTreeCollection));
         }
 

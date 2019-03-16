@@ -1,5 +1,4 @@
-﻿using DirectoryTools.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DirectoryTools.View
+namespace DirectoryToolsExamples.View
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class XplorerView : UserControl
+    public partial class MainWindow : Window
     {
-        public XplorerView()
+        public MainWindow()
         {
-            DataContext = new XplorerViewModel();
             InitializeComponent();
+        }
+
+        private void XplorerView_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

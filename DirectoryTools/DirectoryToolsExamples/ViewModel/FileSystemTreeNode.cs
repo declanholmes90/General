@@ -1,6 +1,7 @@
-﻿using System.Windows.Forms;
+﻿using DirectoryTools.Model;
+using System.Windows.Forms;
 
-namespace DirectoryTools.Model
+namespace DirectoryToolsExamples.Model
 {
     public class FileSystemTreeNode : TreeNode
     {

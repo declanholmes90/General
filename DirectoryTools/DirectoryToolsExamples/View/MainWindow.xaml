@@ -1,9 +1,9 @@
-﻿<Window x:Class="DirectoryTools.View.MainWindow"
+﻿<Window x:Class="DirectoryToolsExamples.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DirectoryTools.View"
+        xmlns:local="clr-namespace:DirectoryToolsExamples.View"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>

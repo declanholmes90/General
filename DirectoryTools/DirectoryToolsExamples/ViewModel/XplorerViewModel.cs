@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Forms;
+using DirectoryToolsExamples.Model;
 
-namespace DirectoryTools.ViewModel
+namespace DirectoryToolsExamples.ViewModel
 {
     public class XplorerViewModel : INotifyPropertyChanged
     {
