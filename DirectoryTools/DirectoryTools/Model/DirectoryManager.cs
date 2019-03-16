@@ -3,11 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace DirectoryTools.Model
 {
@@ -15,6 +11,8 @@ namespace DirectoryTools.Model
     {
         private readonly int MAX_DEPTH = 10;
         private int currentDepthLevel = 0;
+
+        private readonly Dictionary<string, FileSystemElement> DirectoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
 
         private readonly ObservableCollection<FileSystemElement> directoryTreeCollection = new ObservableCollection<FileSystemElement>();
 
@@ -35,6 +33,8 @@ namespace DirectoryTools.Model
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private bool PopulateDirectoryTree(FileSystemElement node)
         {
+            DirectoryQuickAccessDictionary.Add(node.AbsolutePath, node);
+
             currentDepthLevel++;
 
             IHasChildren nodeAsDirectory = node as IHasChildren;
