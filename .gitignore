@@ -1,9 +1,7 @@
-bin/
-obj/
+/bin/*
+/obj/*
 *.suo
 *.user
 *.exe
 _ReSharper.*
-bin
-obj
 packages
