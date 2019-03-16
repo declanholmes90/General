@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SVN_Xplorer.Model
+{
+    public class LogicalDriveElement : FileSystemElement, IHasChildren
+    {
+
+        private ObservableCollection<FileSystemElement> children = new ObservableCollection<FileSystemElement>();
+
+        public LogicalDriveElement(string name, string absolutePath, int depthFromRoot)
+            :base(name, absolutePath, depthFromRoot)
+        {
+
+        }
+
+        public void AddChild(FileSystemElement child)
+        {
+            children.Add(child);
+        }
+
+        public ObservableCollection<FileSystemElement> GetChildren()
+        {
+            return children;
+        }
+    }
+}
