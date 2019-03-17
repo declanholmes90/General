@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DirectoryTools.Model
 {
@@ -6,6 +7,8 @@ namespace DirectoryTools.Model
     {
         void AddChild(FileSystemElement node);
 
-        ObservableCollection<FileSystemElement> GetChildren();
+        void RemoveAllChilden();
+
+        List<FileSystemElement> GetChildren();
     }
 }

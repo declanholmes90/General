@@ -2,31 +2,66 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Forms;
 using DirectoryToolsExamples.Model;
+using DirectoryTools.Model.EventArguments;
 
 namespace DirectoryToolsExamples.ViewModel
 {
     public class XplorerViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<FileSystemTreeNode> TreeViewRoots { get; } = new ObservableCollection<FileSystemTreeNode>();
+        private readonly ObservableCollection<FileSystemTreeNode> _treeViewNodes = new ObservableCollection<FileSystemTreeNode>();
+
+        public ObservableCollection<FileSystemTreeNode> TreeViewNodes
+        {
+            get
+            {
+                return _treeViewNodes;
+            }
+        }
 
         DirectoryManager directoryManager = new DirectoryManager();
 
+        public string testText
+        {
+            get
+            {
+                return _testText;
+            }
+
+            set
+            {
+                _testText = value;
+
+                OnPropertyChanged(nameof(testText));
+            }
+        }
+        private string _testText;
+
         public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string property)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
 
         public XplorerViewModel()
         {
-            //Directories = directoryManager.Directories;
+            directoryManager.FileSystemChangedEventHandler += FileSystemChangedHandler;
 
-            foreach (FileSystemElement drive in directoryManager.Directories)
-            {
-                TreeViewRoots.Add(new FileSystemTreeNode(drive));
-            }
+            UpdateRoots(directoryManager.Directories);
 
-            foreach (FileSystemTreeNode t in TreeViewRoots)
+            foreach (FileSystemTreeNode t in TreeViewNodes)
             {
                 CreateTreeNodes(t);
+            }
+        }
+
+        private void UpdateRoots(List<FileSystemElement> roots)
+        {
+            TreeViewNodes.Clear();
+
+            foreach (FileSystemElement drive in roots)
+            {
+                TreeViewNodes.Add(new FileSystemTreeNode(drive));
             }
         }
 
@@ -55,6 +90,21 @@ namespace DirectoryToolsExamples.ViewModel
 
                 CreateTreeNodes(childNode);
             }
+        }
+
+        private void FileSystemChangedHandler(FileSystemModifiedEventArgs e)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(delegate
+            {
+                UpdateRoots(directoryManager.Directories);
+
+                foreach (FileSystemTreeNode t in _treeViewNodes)
+                {
+                    CreateTreeNodes(t);
+                }
+            });
+
+            testText = "CHANGED";
         }
     }
 }

@@ -12,16 +12,15 @@ namespace DirectoryTools.Model
         private readonly int MAX_DEPTH = 10;
         private int currentDepthLevel = 0;
 
-        private readonly Dictionary<string, FileSystemElement> DirectoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
-
-        private readonly ObservableCollection<FileSystemElement> directoryTreeCollection = new ObservableCollection<FileSystemElement>();
+        private readonly Dictionary<string, FileSystemElement> directoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
+        private readonly List<FileSystemElement> directoryTreeCollection = new List<FileSystemElement>();
 
         public DirectoryManager()
         {
             foreach (string s in Directory.GetLogicalDrives())
             {
                 FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
-                ObservableCollection<FileSystemElement> directories = new ObservableCollection<FileSystemElement>();
+                List<FileSystemElement> directories = new List<FileSystemElement>();
 
                 directoryTreeCollection.Add(drive);
                 CreateDirectoryWatcher(s);
@@ -33,7 +32,12 @@ namespace DirectoryTools.Model
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private bool PopulateDirectoryTree(FileSystemElement node)
         {
-            DirectoryQuickAccessDictionary.Add(node.AbsolutePath, node);
+            if(directoryQuickAccessDictionary.ContainsKey(node.AbsolutePath))
+            {
+                directoryQuickAccessDictionary.Remove(node.AbsolutePath);
+            }
+
+            directoryQuickAccessDictionary.Add(node.AbsolutePath, node);
 
             currentDepthLevel++;
 
@@ -73,7 +77,7 @@ namespace DirectoryTools.Model
             return true;
         }
 
-        public ObservableCollection<FileSystemElement> Directories
+        public List<FileSystemElement> Directories
         {
             get { return directoryTreeCollection; }
         }
@@ -90,22 +94,43 @@ namespace DirectoryTools.Model
                                     | NotifyFilters.FileName
                                     | NotifyFilters.DirectoryName;
 
-            watcher.Changed += OnChangedHandler;
-            watcher.Created += OnChangedHandler;
-            watcher.Deleted += OnChangedHandler;
-            watcher.Renamed += OnChangedHandler;
+            watcher.Changed += OnFileSystemElementChange;
+            watcher.Deleted += OnFileSystemElementChange;
+            watcher.Renamed += OnFileSystemElementChange;
 
             watcher.EnableRaisingEvents = true;
-
-            directoryModifiedEvent?.Invoke(new DirectoryModifiedEventArgs(directoryTreeCollection));
         }
 
-        private void OnChangedHandler(object o, FileSystemEventArgs e)
+        private void OnFileSystemElementChange(object o, FileSystemEventArgs e)
         {
-            directoryModifiedEvent.Invoke(new DirectoryModifiedEventArgs(directoryTreeCollection));
+            string parentString = Directory.GetParent(e.FullPath).ToString();
+            IHasChildren parentObject;
+
+            try
+            {
+                parentObject = (IHasChildren)directoryQuickAccessDictionary[parentString];
+                parentObject.RemoveAllChilden();
+
+                currentDepthLevel = ((FileSystemElement)parentObject).DepthFromRoot;
+
+                PopulateDirectoryTree((FileSystemElement) parentObject);
+
+                FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(directoryTreeCollection));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
-        public delegate void DirectoryModifiedEvent(DirectoryModifiedEventArgs e);
-        public DirectoryModifiedEvent directoryModifiedEvent { get; }
+        private bool NodeHasChildren(FileSystemElement element)
+        {
+            IHasChildren nodeWithChildren = (IHasChildren)element;
+
+            return nodeWithChildren != null;
+        }
+
+        public delegate void FileSystemChangedEvent(FileSystemModifiedEventArgs e);
+        public FileSystemChangedEvent FileSystemChangedEventHandler { get; set; }
     }
 }

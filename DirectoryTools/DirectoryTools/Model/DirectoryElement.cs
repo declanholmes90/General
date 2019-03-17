@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DirectoryTools.Model
 {
     public class DirectoryElement : FileSystemElement, IHasChildren
     {
-        private ObservableCollection<FileSystemElement> children = new ObservableCollection<FileSystemElement>();
+        private List<FileSystemElement> children = new List<FileSystemElement>();
 
         public DirectoryElement(string name, string absolutePath, int depthFromRoot)
             : base(name, absolutePath, depthFromRoot)
@@ -17,9 +18,14 @@ namespace DirectoryTools.Model
             children.Add(child);
         }
 
-        public ObservableCollection<FileSystemElement> GetChildren()
+        public List<FileSystemElement> GetChildren()
         {
             return children;
+        }
+
+        public void RemoveAllChilden()
+        {
+            children = new List<FileSystemElement>();
         }
     }
 }

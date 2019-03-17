@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DirectoryTools.Model.EventArguments
 {
-    public class DirectoryModifiedEventArgs : EventArgs
+    public class FileSystemModifiedEventArgs : EventArgs
     {
-        public ObservableCollection<FileSystemElement> FilesAndFolderLabels { get; }
+        public List<FileSystemElement> FilesAndFolderLabels { get; }
 
-        public DirectoryModifiedEventArgs(ObservableCollection<FileSystemElement> filetree)
+        public FileSystemModifiedEventArgs(List<FileSystemElement> filetree)
         {
             FilesAndFolderLabels = filetree;
         }
