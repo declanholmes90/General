@@ -22,21 +22,21 @@ namespace DirectoryToolsExamples.ViewModel
 
         DirectoryManager directoryManager = new DirectoryManager();
 
-        public string testText
+        public string LastUpdatedMsg
         {
             get
             {
-                return _testText;
+                return _lastUpdatedMsg;
             }
 
             set
             {
-                _testText = value;
+                _lastUpdatedMsg = value;
 
-                OnPropertyChanged(nameof(testText));
+                OnPropertyChanged(nameof(LastUpdatedMsg));
             }
         }
-        private string _testText;
+        private string _lastUpdatedMsg;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string property)
@@ -68,22 +68,14 @@ namespace DirectoryToolsExamples.ViewModel
 
         private void CreateTreeNodes(FileSystemTreeNode node)
         {
-            IHasChildren nodeWithChildren = null;
+            DirectoryElement elementWithChildren = node.Element as DirectoryElement;
 
-            if (node.Element.GetType() == typeof(LogicalDriveElement))
-            {
-                nodeWithChildren = (LogicalDriveElement)node.Element;
-            }
-            else if (node.Element.GetType() == typeof(DirectoryElement))
-            {
-                nodeWithChildren = (DirectoryElement)node.Element;
-            }
-            else
+            if(elementWithChildren == null)
             {
                 return;
             }
 
-            foreach (FileSystemElement e in nodeWithChildren.GetChildren())
+            foreach (FileSystemElement e in elementWithChildren.GetChildren())
             {
                 FileSystemTreeNode childNode = new FileSystemTreeNode(e);
 
@@ -105,7 +97,7 @@ namespace DirectoryToolsExamples.ViewModel
                 }
             });
 
-            testText = "Updated " + DateTime.UtcNow;
+            LastUpdatedMsg = "Updated " + DateTime.UtcNow;
         }
     }
 }

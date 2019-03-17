@@ -9,11 +9,11 @@ namespace DirectoryTools.Model.EventArguments
 {
     public class FileSystemModifiedEventArgs : EventArgs
     {
-        public List<FileSystemElement> FilesAndFolderLabels { get; }
+        public DirectoryElement UpdatedDirectory { get; }
 
-        public FileSystemModifiedEventArgs(List<FileSystemElement> filetree)
+        public FileSystemModifiedEventArgs(DirectoryElement updatedDirectory)
         {
-            FilesAndFolderLabels = filetree;
+            UpdatedDirectory = updatedDirectory;
         }
     }
 }

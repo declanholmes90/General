@@ -32,46 +32,51 @@ namespace DirectoryTools.Model
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private bool PopulateDirectoryTree(FileSystemElement node)
         {
-            if(directoryQuickAccessDictionary.ContainsKey(node.AbsolutePath))
-            {
-                directoryQuickAccessDictionary.Remove(node.AbsolutePath);
-            }
-
-            directoryQuickAccessDictionary.Add(node.AbsolutePath, node);
-
-            currentDepthLevel++;
-
-            IHasChildren nodeAsDirectory = node as IHasChildren;
+            DirectoryElement nodeAsDirectory = node as DirectoryElement;
 
             if (nodeAsDirectory == null)
             {
-                currentDepthLevel--;
                 return false;
             }
 
+            currentDepthLevel++;
+
             foreach (string s in Directory.GetDirectories(node.AbsolutePath))
             {
-                DirectoryElement directoryElement = new DirectoryElement(Path.GetFileName(s), s, currentDepthLevel);
-
-                nodeAsDirectory.AddChild(directoryElement);
-
-                if (currentDepthLevel < MAX_DEPTH)
+                if ((File.GetAttributes(s) & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
-                    try
-                    {
-                        PopulateDirectoryTree(directoryElement);
-                    }
-                    catch (Exception)
-                    {
+                    DirectoryElement directoryElement = new DirectoryElement(Path.GetFileName(s), s, currentDepthLevel);
 
+                    nodeAsDirectory.AddChild(directoryElement);
+
+                    if (currentDepthLevel < MAX_DEPTH)
+                    {
+                        try
+                        {
+                            PopulateDirectoryTree(directoryElement);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.Error.Write(ex);
+                        }
                     }
                 }
             }
 
             foreach (string s in Directory.GetFiles(node.AbsolutePath))
             {
-                nodeAsDirectory.AddChild(new FileElement(Path.GetFileName(s), s, currentDepthLevel));
+                if ((File.GetAttributes(s) & FileAttributes.Hidden) != FileAttributes.Hidden)
+                {
+                    nodeAsDirectory.AddChild(new FileElement(Path.GetFileName(s), s, currentDepthLevel));
+                }
             }
+
+            if (directoryQuickAccessDictionary.ContainsKey(node.AbsolutePath))
+            {
+                directoryQuickAccessDictionary.Remove(node.AbsolutePath);
+            }
+
+            directoryQuickAccessDictionary.Add(node.AbsolutePath, node);
 
             currentDepthLevel--;
             return true;
@@ -103,19 +108,19 @@ namespace DirectoryTools.Model
 
         private void OnFileSystemElementChange(object o, FileSystemEventArgs e)
         {
-            string parentString = Directory.GetParent(e.FullPath).ToString();
-            IHasChildren parentObject;
+            string parentString = e.FullPath;
+            DirectoryElement parentObject;
 
             try
             {
-                parentObject = (IHasChildren)directoryQuickAccessDictionary[parentString];
+                parentObject = (DirectoryElement)directoryQuickAccessDictionary[parentString];
                 parentObject.RemoveAllChilden();
 
-                currentDepthLevel = ((FileSystemElement)parentObject).DepthFromRoot;
+                currentDepthLevel = parentObject.DepthFromRoot;
 
-                PopulateDirectoryTree((FileSystemElement) parentObject);
+                PopulateDirectoryTree(parentObject);
 
-                FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(directoryTreeCollection));
+                FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(parentObject));
             }
             catch (Exception ex)
             {

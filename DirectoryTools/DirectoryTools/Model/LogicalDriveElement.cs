@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace DirectoryTools.Model
 {
-    public class LogicalDriveElement : FileSystemElement, IHasChildren
+    public class LogicalDriveElement : DirectoryElement
     {
 
         private List<FileSystemElement> children = new List<FileSystemElement>();
@@ -13,21 +13,6 @@ namespace DirectoryTools.Model
             :base(name, absolutePath, depthFromRoot)
         {
 
-        }
-
-        public void AddChild(FileSystemElement child)
-        {
-            children.Add(child);
-        }
-
-        public List<FileSystemElement> GetChildren()
-        {
-            return children;
-        }
-
-        public void RemoveAllChilden()
-        {
-            children = new List<FileSystemElement>();
         }
     }
 }
