@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DirectoryToolsExamples.Model;
 using DirectoryTools.Model.EventArguments;
+using System;
 
 namespace DirectoryToolsExamples.ViewModel
 {
@@ -104,7 +105,7 @@ namespace DirectoryToolsExamples.ViewModel
                 }
             });
 
-            testText = "CHANGED";
+            testText = "Updated " + DateTime.UtcNow;
         }
     }
 }

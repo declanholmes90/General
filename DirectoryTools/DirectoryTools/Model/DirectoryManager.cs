@@ -9,7 +9,7 @@ namespace DirectoryTools.Model
 {
     public class DirectoryManager
     {
-        private readonly int MAX_DEPTH = 10;
+        private readonly int MAX_DEPTH = 5;
         private int currentDepthLevel = 0;
 
         private readonly Dictionary<string, FileSystemElement> directoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
