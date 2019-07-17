@@ -19,12 +19,15 @@ namespace DirectoryTools.DirectoryClasses
         {
             foreach (string s in Directory.GetLogicalDrives())
             {
-                FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
+                if (Directory.Exists(s))
+                {
+                    FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
 
-                Directories.Add(drive);
-                CreateDirectoryWatcher(s);
+                    Directories.Add(drive);
+                    CreateDirectoryWatcher(s);
 
-                PopulateDirectoryTree(drive, MAX_DEPTH);
+                    PopulateDirectoryTree(drive, MAX_DEPTH);
+                }
             }
         }
 
@@ -66,10 +69,7 @@ namespace DirectoryTools.DirectoryClasses
                     {
                         try
                         {
-                            new Thread(() =>
-                            {
-                                PopulateDirectoryTree(directoryElement, depth);
-                            }).Start();
+                            PopulateDirectoryTree(directoryElement, depth);
                         }
                         catch (Exception ex)
                         {
@@ -104,20 +104,27 @@ namespace DirectoryTools.DirectoryClasses
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private void CreateDirectoryWatcher(string path)
         {
-            FileSystemWatcher watcher = new FileSystemWatcher();
+            try
+            {
+                FileSystemWatcher watcher = new FileSystemWatcher();
 
-            watcher.Path = path;
+                watcher.Path = path;
 
-            watcher.NotifyFilter = NotifyFilters.LastAccess
-                                    | NotifyFilters.LastWrite
-                                    | NotifyFilters.FileName
-                                    | NotifyFilters.DirectoryName;
+                watcher.NotifyFilter = NotifyFilters.LastAccess
+                                        | NotifyFilters.LastWrite
+                                        | NotifyFilters.FileName
+                                        | NotifyFilters.DirectoryName;
 
-            watcher.Changed += OnFileSystemElementChange;
-            watcher.Deleted += OnFileSystemElementChange;
-            watcher.Renamed += OnFileSystemElementChange;
+                watcher.Changed += OnFileSystemElementChange;
+                watcher.Deleted += OnFileSystemElementChange;
+                watcher.Renamed += OnFileSystemElementChange;
 
-            watcher.EnableRaisingEvents = true;
+                watcher.EnableRaisingEvents = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         private void OnFileSystemElementChange(object o, FileSystemEventArgs e)

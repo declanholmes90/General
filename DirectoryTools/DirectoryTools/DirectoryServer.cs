@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DirectoryTools.DirectoryClasses;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,8 +13,11 @@ namespace DirectoryTools
     public class DirectoryServer
     {
         private const int PORT = 11000;
+
         public static void BeginListening()
         {
+            DirectoryManager directoryManager = new DirectoryManager();
+
             IPHostEntry localHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddr = localHostInfo.AddressList[0];
             IPEndPoint ipLocalPoint = new IPEndPoint(ipAddr, PORT);
@@ -29,11 +34,29 @@ namespace DirectoryTools
                     Console.WriteLine("Awaiting connection from client...");
                     Socket connectionHandler = listener.Accept();
                     Console.WriteLine("Client connected");
+
+                    string jsonData = JsonConvert.SerializeObject(directoryManager.Directories, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Auto
+                    });
+
+                    byte[] dataAsBytes = Encoding.Default.GetBytes(jsonData);
+
+                    connectionHandler.Send(dataAsBytes);
+
+                    Console.WriteLine("JSON Data sent to client.");
+
+                    connectionHandler.Shutdown(SocketShutdown.Both);
+                    connectionHandler.Close();
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 Console.WriteLine("Exception has occurred...");
+                Console.WriteLine(ex);
+
+                listener.Shutdown(SocketShutdown.Both);
+                listener.Close();
             }
         }
 
