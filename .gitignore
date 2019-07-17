@@ -5,3 +5,7 @@
 *.exe
 _ReSharper.*
 packages
+*.lock
+*.ide
+*.ide-shm
+*.ide-wal
