@@ -1,4 +1,4 @@
-﻿using DirectoryTools.Model;
+﻿using DirectoryTools.DirectoryClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace DirectoryToolsExamples.ViewModel
 {
     public class MainViewModel
     {
-        
+        public XplorerViewModel XplorerViewModel { get; set; } = new XplorerViewModel();
     }
 }

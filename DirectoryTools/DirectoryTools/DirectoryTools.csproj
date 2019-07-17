@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{55B58983-AF59-4DA5-8644-9BFFEFBB3F4C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DirectoryTools</RootNamespace>
     <AssemblyName>DirectoryTools</AssemblyName>
@@ -29,6 +29,27 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,13 +62,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\DirectoryElement.cs" />
-    <Compile Include="Model\DirectoryManager.cs" />
-    <Compile Include="Model\EventArguments\FileSystemModifiedEventArgs.cs" />
-    <Compile Include="Model\FileElement.cs" />
-    <Compile Include="Model\FileSystemElement.cs" />
-    <Compile Include="Model\IHasChildren.cs" />
-    <Compile Include="Model\LogicalDriveElement.cs" />
+    <Compile Include="DirectoryClasses\DirectoryElement.cs" />
+    <Compile Include="DirectoryClasses\DirectoryManager.cs" />
+    <Compile Include="DirectoryClasses\EventArguments\FileSystemModifiedEventArgs.cs" />
+    <Compile Include="DirectoryClasses\FileElement.cs" />
+    <Compile Include="DirectoryClasses\FileSystemElement.cs" />
+    <Compile Include="DirectoryClasses\IHasChildren.cs" />
+    <Compile Include="DirectoryClasses\LogicalDriveElement.cs" />
+    <Compile Include="DirectoryClient.cs" />
+    <Compile Include="DirectoryServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

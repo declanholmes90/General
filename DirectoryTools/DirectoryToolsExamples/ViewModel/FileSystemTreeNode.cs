@@ -1,4 +1,4 @@
-﻿using DirectoryTools.Model;
+﻿using DirectoryTools.DirectoryClasses;
 using System.Windows.Forms;
 
 namespace DirectoryToolsExamples.Model

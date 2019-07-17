@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DirectoryTools.Model
+namespace DirectoryTools.DirectoryClasses
 {
     public class DirectoryElement : FileSystemElement, IHasChildren
     {

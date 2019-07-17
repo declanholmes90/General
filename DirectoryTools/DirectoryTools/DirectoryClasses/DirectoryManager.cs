@@ -1,36 +1,49 @@
-﻿using DirectoryTools.Model.EventArguments;
+﻿using DirectoryTools.DirectoryClasses.EventArguments;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Security.Permissions;
+using System.Threading;
 
-namespace DirectoryTools.Model
+namespace DirectoryTools.DirectoryClasses
 {
     public class DirectoryManager
     {
-        private readonly int MAX_DEPTH = 5;
+        private readonly int MAX_DEPTH = 2;
         private int currentDepthLevel = 0;
 
         private readonly Dictionary<string, FileSystemElement> directoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
-        private readonly List<FileSystemElement> directoryTreeCollection = new List<FileSystemElement>();
 
         public DirectoryManager()
         {
             foreach (string s in Directory.GetLogicalDrives())
             {
                 FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
-                List<FileSystemElement> directories = new List<FileSystemElement>();
 
-                directoryTreeCollection.Add(drive);
+                Directories.Add(drive);
                 CreateDirectoryWatcher(s);
 
-                PopulateDirectoryTree(drive);
+                PopulateDirectoryTree(drive, MAX_DEPTH);
+            }
+        }
+
+        public void GetDirectoryTree()
+        {
+            foreach (string s in Directory.GetLogicalDrives())
+            {
+                FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
+                new Thread(() =>
+                {
+                    PopulateDirectoryTree(drive, 10);
+
+                    FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(drive as DirectoryElement));
+                }).Start();
             }
         }
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
-        private bool PopulateDirectoryTree(FileSystemElement node)
+        private bool PopulateDirectoryTree(FileSystemElement node, int depth)
         {
             DirectoryElement nodeAsDirectory = node as DirectoryElement;
 
@@ -49,11 +62,14 @@ namespace DirectoryTools.Model
 
                     nodeAsDirectory.AddChild(directoryElement);
 
-                    if (currentDepthLevel < MAX_DEPTH)
+                    if (currentDepthLevel < depth)
                     {
                         try
                         {
-                            PopulateDirectoryTree(directoryElement);
+                            new Thread(() =>
+                            {
+                                PopulateDirectoryTree(directoryElement, depth);
+                            }).Start();
                         }
                         catch (Exception ex)
                         {
@@ -68,6 +84,7 @@ namespace DirectoryTools.Model
                 if ((File.GetAttributes(s) & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
                     nodeAsDirectory.AddChild(new FileElement(Path.GetFileName(s), s, currentDepthLevel));
+                    FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(nodeAsDirectory));
                 }
             }
 
@@ -82,10 +99,7 @@ namespace DirectoryTools.Model
             return true;
         }
 
-        public List<FileSystemElement> Directories
-        {
-            get { return directoryTreeCollection; }
-        }
+        public List<FileSystemElement> Directories { get; } = new List<FileSystemElement>();
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         private void CreateDirectoryWatcher(string path)
@@ -118,7 +132,7 @@ namespace DirectoryTools.Model
 
                 currentDepthLevel = parentObject.DepthFromRoot;
 
-                PopulateDirectoryTree(parentObject);
+                PopulateDirectoryTree(parentObject, MAX_DEPTH);
 
                 FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(parentObject));
             }

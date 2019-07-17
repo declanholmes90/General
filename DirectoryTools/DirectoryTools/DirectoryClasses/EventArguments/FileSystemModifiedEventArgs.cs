@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DirectoryTools.Model.EventArguments
+namespace DirectoryTools.DirectoryClasses.EventArguments
 {
     public class FileSystemModifiedEventArgs : EventArgs
     {

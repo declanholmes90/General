@@ -1,9 +1,9 @@
-﻿using DirectoryTools.Model;
+﻿using DirectoryTools.DirectoryClasses;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using DirectoryToolsExamples.Model;
-using DirectoryTools.Model.EventArguments;
+using DirectoryTools.DirectoryClasses.EventArguments;
 using System;
 
 namespace DirectoryToolsExamples.ViewModel

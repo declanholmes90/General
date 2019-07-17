@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DirectoryToolsExamples.View"
+        xmlns:viewModel="clr-namespace:DirectoryToolsExamples.ViewModel"
         mc:Ignorable="d"
+        DataContext="{Binding viewModel.MainViewModel}"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <local:XplorerView Loaded="XplorerView_Loaded" />

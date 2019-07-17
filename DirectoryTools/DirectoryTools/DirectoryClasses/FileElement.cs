@@ -1,4 +1,4 @@
-﻿namespace DirectoryTools.Model
+﻿namespace DirectoryTools.DirectoryClasses
 {
     public class FileElement : FileSystemElement
     {
