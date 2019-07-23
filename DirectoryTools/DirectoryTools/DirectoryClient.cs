@@ -24,17 +24,17 @@ namespace DirectoryTools
 
             Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-            try
+            while (!exit)
             {
-                sender.Connect(remoteEP);
-
-                while(!exit)
+                try
                 {
+                    sender.Connect(remoteEP);
+
                     byte[] buffer = new byte[1024 * 4];
                     int readBytes = sender.Receive(buffer);
                     MemoryStream memoryStream = new MemoryStream();
 
-                    while(readBytes > 0)
+                    while (readBytes > 0)
                     {
                         memoryStream.Write(buffer, 0, readBytes);
 
@@ -64,13 +64,16 @@ namespace DirectoryTools
 
                     exit = true;
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
 
-                sender.Shutdown(SocketShutdown.Both);
-                sender.Close();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
+                if (sender.Connected)
+                {
+                    sender.Shutdown(SocketShutdown.Both);
+                    sender.Close();
+                }
             }
         }
     }
