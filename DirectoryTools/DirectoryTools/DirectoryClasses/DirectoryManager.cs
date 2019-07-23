@@ -10,7 +10,8 @@ namespace DirectoryTools.DirectoryClasses
 {
     public class DirectoryManager
     {
-        private readonly int MAX_DEPTH = 2;
+        private readonly int MAX_DEPTH = 10;
+        private readonly int BACKGROUND_DEPTH_INTERVAL = 10;
         private int currentDepthLevel = 0;
 
         private readonly Dictionary<string, FileSystemElement> directoryQuickAccessDictionary = new Dictionary<string, FileSystemElement>();
@@ -31,6 +32,10 @@ namespace DirectoryTools.DirectoryClasses
             }
         }
 
+        // Unfinished - intended to run after an initial pass of the file system
+        // that would retrieve MAX_DEPTH levels of files/directories from roots. This method would
+        // then run in the background, returning the rest of the file system, and notify the client
+        // when the full structure is ready
         public void GetDirectoryTree()
         {
             foreach (string s in Directory.GetLogicalDrives())
@@ -38,7 +43,7 @@ namespace DirectoryTools.DirectoryClasses
                 FileSystemElement drive = new LogicalDriveElement(s, s, currentDepthLevel);
                 new Thread(() =>
                 {
-                    PopulateDirectoryTree(drive, 10);
+                    PopulateDirectoryTree(drive, BACKGROUND_DEPTH_INTERVAL);
 
                     FileSystemChangedEventHandler?.Invoke(new FileSystemModifiedEventArgs(drive as DirectoryElement));
                 }).Start();
@@ -145,7 +150,7 @@ namespace DirectoryTools.DirectoryClasses
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex);
             }
         }
 
