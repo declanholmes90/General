@@ -7,15 +7,18 @@ Overview:
 The general purpose of this application is to model a file system.
 
 Components:
-DirectoryManager project  - Creates the model of the filesystem, registers for changes to the file system.
-                          - Contains Client/Server code, intended to allow for a remote entities file system to be modeled, and sent to
-                            connected clients via JSON over socket.
+- DirectoryManager project
+  - Creates the model of the filesystem, registers for changes to the file system.
+  - Contains Client/Server code, intended to allow for a remote entities file system to be modeled, and sent to
+    connected clients via JSON over socket.
                             
-ClientTest project        - Light weight project, creates an instance of the client class contained in DirectoryManager project.
+- ClientTest project
+  - Light weight project, creates an instance of the client class contained in DirectoryManager project.
 
-DirectoryToolsExamples    - Light weight project, creates an instance of the DirectoryManager, which models the file system on the local                               machine.
-                          - Registers to the fileSystemChangedEvent exposed by DirectoryManager.cs.
-                          - Processes the file system model created by the DirectoryManager to a for suitable for display.
+- DirectoryToolsExamples    
+  - Light weight project, creates an instance of the DirectoryManager, which models the file system on the local                               machine.
+  - Registers to the fileSystemChangedEvent exposed by DirectoryManager.cs.
+  - Processes the file system model created by the DirectoryManager to a for suitable for display.
                           
 To Do:
 
